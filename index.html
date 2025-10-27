@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>깨끗손 부루마블 🧼</title>
+<style>
+  :root {
+    --line:#cddfee;
+    --text:#1d2b3a;
+    --p1:#79c8ff;   /* 파랑말 */
+    --p2:#ff9ecd;   /* 핑크말 */
+    --tile-blue:#e9faff;
+    --tile-red:#fff1f1;
+    --tile-yellow:#fff7d9;
+    --tile-green:#e8fff1;
+    --tile-border-blue:#79c8ff;
+    --tile-border-red:#ffb4b4;
+    --tile-border-yellow:#ffd36a;
+    --tile-border-green:#9fe1ad;
+    --bg:#f5fbff;
+  }
+
+  body {
+    font-family: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  h1 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 0;
+    line-height:1.4;
+  }
+  .subtitle {
+    font-size: .8rem;
+    text-align:center;
+    color:#4e6b86;
+    line-height:1.4;
+  }
+
+  /* layout */
+  .wrapper {
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    width:100%;
+    max-width:900px;
+  }
+  @media(min-width:768px){
+    .wrapper {
+      flex-direction:row;
+      align-items:flex-start;
+    }
+  }
+
+  /* board area */
+  .board-area{
+    flex:1 1 auto;
+    display:flex;
+    justify-content:center;
+  }
+
+  /* square board */
+  .board {
+    width: min(80vw,480px);
+    height: min(80vw,480px);
+    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #e9f6ff 80%);
+    border: 2px solid var(--line);
+    border-radius: 16px;
+    box-shadow:0 20px 40px rgba(0,0,0,.05);
+    position: relative;
+    display:grid;
+    grid-template-columns: repeat(5,1fr);
+    grid-template-rows: repeat(5,1fr);
+    padding:8px;
+    box-sizing:border-box;
+    font-size:10px;
+  }
+
+  /* tile style */
+  .tile {
+    position:relative;
+    border:2px solid var(--line);
+    border-radius:10px;
+    padding:4px;
+    box-sizing:border-box;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    line-height:1.2;
+    font-weight:500;
+  }
+
+  .green { background:var(--tile-green); border-color:var(--tile-border-green); color:#2f6f33; font-weight:600;}
+  .blue  { background:var(--tile-blue); border-color:var(--tile-border-blue); color:#13506f; font-weight:600;}
+  .red   { background:var(--tile-red); border-color:var(--tile-border-red); color:#7a1d1d; font-weight:600;}
+  .yellow{ background:var(--tile-yellow); border-color:var(--tile-border-yellow); color:#6a4a00; font-weight:700;}
+
+  /* hide center tiles (only border should be visible) */
+  .inner {
+    background:transparent !important;
+    border:none !important;
+    box-shadow:none !important;
+    pointer-events:none;
+  }
+
+  /* player tokens */
+  .player-token {
+    position:absolute;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    border:2px solid #fff;
+    box-shadow:0 4px 8px rgba(0,0,0,.2);
+  }
+  .p1 { background:var(--p1); }
+  .p2 { background:var(--p2); }
+
+  .tile-index {
+    position:absolute;
+    top:2px;
+    left:4px;
+    font-size:8px;
+    line-height:1;
+    opacity:.5;
+    font-weight:600;
+  }
+
+  /* center label */
+  .center-label{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:70%;
+    max-width:240px;
+    transform:translate(-50%,-50%);
+    text-align:center;
+    font-size:12px;
+    line-height:1.4;
+    background:#ffffffcc;
+    border:2px solid var(--line);
+    border-radius:12px;
+    box-shadow:0 16px 32px rgba(0,0,0,.07);
+    padding:12px;
+  }
+  .center-label-title{
+    font-weight:600;
+    font-size:14px;
+    margin-bottom:4px;
+    color:#1d2b3a;
+  }
+  .center-label-sub{
+    font-size:10px;
+    color:#4e6b86;
+    line-height:1.4;
+  }
+
+  /* side panel */
+  .panel {
+    flex: 0 1 260px;
+    background:#fff;
+    border:2px solid var(--line);
+    border-radius:16px;
+    box-shadow:0 20px 40px rgba(0,0,0,.05);
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    font-size:12px;
+    line-height:1.4;
+  }
+
+  .section-title {
+    font-size:12px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:6px;
+    color:#234;
+  }
+
+  .dice-row{
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    gap:8px;
+  }
+  .value-box{
+    min-width:36px;
+    min-height:36px;
+    border-radius:10px;
+    border:2px solid var(--line);
+    background:#fff;
+    font-size:14px;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  #rollBtn{
+    background:#1d90ff;
+    border:none;
+    color:#fff;
+    font-size:12px;
+    font-weight:600;
+    line-height:1;
+    padding:10px 12px;
+    border-radius:10px;
+    box-shadow:0 8px 16px rgba(29,144,255,.3);
+    cursor:pointer;
+  }
+  #rollBtn:active{
+    transform:translateY(1px);
+    box-shadow:0 4px 8px rgba(29,144,255,.2);
+  }
+  .players-status{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .player-card{
+    flex:1 1 110px;
+    background:#f9f9fb;
+    border:2px solid var(--line);
+    border-radius:12px;
+    padding:10px;
+    line-height:1.4;
+    min-width:110px;
+  }
+  .player-head{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-weight:600;
+    font-size:11px;
+  }
+  .dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    border:2px solid #fff;
+    box-shadow:0 2px 4px rgba(0,0,0,.2);
+  }
+  .dot.p1{ background:var(--p1); }
+  .dot.p2{ background:var(--p2); }
+
+  .turn-indicator{
+    font-size:11px;
+    color:#4e6b86;
+  }
+
+  .message-box{
+    background:#fffef5;
+    border:2px solid #ffe9a9;
+    border-radius:12px;
+    padding:12px;
+    font-size:11px;
+    line-height:1.4;
+    min-height:70px;
+  }
+  .message-title{
+    font-weight:600;
+    margin-bottom:4px;
+    color:#6a4a00;
+    font-size:11px;
+  }
+  .message-body{
+    color:#4a3a00;
+    white-space:pre-line;
+  }
+
+  .guide-box{
+    background:#f6fbff;
+    border:2px solid #d8eafb;
+    border-radius:12px;
+    padding:10px;
+    font-size:11px;
+    line-height:1.4;
+    color:#13506f;
+  }
+
+  .footer-note{
+    font-size:10px;
+    color:#4e6b86;
+    line-height:1.4;
+  }
+
+</style>
+</head>
+<body>
+
+<h1>깨끗손 부루마블 🧼</h1>
+<div class="subtitle">
+  비누로 30초 이상 손 씻기! 감염병을 막는 가장 쉬운 습관<br/>
+  2인용 턴제 보드게임
+</div>
+
+<div class="wrapper">
+
+  <div class="board-area">
+    <div class="board" id="board">
+      <!-- 타일들은 JS로 채움 -->
+      <div class="center-label">
+        <div class="center-label-title">세계 손씻기의 날</div>
+        <div class="center-label-sub">
+          손바닥 → 손등 → 손가락 사이 → 손톱 밑 → 엄지 → 손목<br/>
+          흐르는 물에 비누로 30초 🧼
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="section-title">🎲 주사위 & 진행</div>
+
+    <div class="dice-row">
+      <div>현재 차례:</div>
+      <div class="value-box" id="currentPlayerBox">P1</div>
+    </div>
+
+    <div class="dice-row">
+      <div>주사위:</div>
+      <div class="value-box" id="diceResult">-</div>
+      <button id="rollBtn">주사위 굴리기</button>
+    </div>
+
+    <div class="players-status">
+      <div class="player-card">
+        <div class="player-head">
+          <div class="dot p1"></div>
+          <div>P1 (파랑)</div>
+        </div>
+        <div class="turn-indicator">위치: <span id="p1PosText">0</span> 칸</div>
+      </div>
+
+      <div class="player-card">
+        <div class="player-head">
+          <div class="dot p2"></div>
+          <div>P2 (핑크)</div>
+        </div>
+        <div class="turn-indicator">위치: <span id="p2PosText">0</span> 칸</div>
+      </div>
+    </div>
+
+    <div class="section-title">📢 이번 칸 미션</div>
+    <div class="message-box">
+      <div class="message-title" id="messageTitle">게임 설명</div>
+      <div class="message-body" id="messageBody">
+        주사위를 눌러 이동해요.
+        먼저 GOAL 도착한 사람이 승리!
+      </div>
+    </div>
+
+    <div class="guide-box">
+      언제 손을 씻을까요?<br/>
+      🍽 식사·간식 전<br/>
+      🚽 화장실 다녀온 후<br/>
+      🤧 기침/콧물 닦은 후<br/>
+      🛝 바깥놀이 후<br/>
+      🐶 동물 만진 후
+    </div>
+
+    <div class="footer-note">
+      흐르는 물에 비누로 30초 동안<br/>
+      손바닥 → 손등 → 손가락 사이 → 손톱 밑 → 엄지 → 손목까지 깨끗하게 ✨
+    </div>
+  </div>
+
+</div>
+
+<script>
+/*
+보드를 부루마블 형태로 돌리는 순서(0~23까지 총 24칸 예시).
+우리는 5x5 격자에서 테두리만 사용.
+인덱스 배치는 시계방향으로:
+top row (왼->오) : 0,1,2,3,4
+right col (위->아래, 중복 제외) : 5,6,7,8
+bottom row (오->왼, 중복 제외): 9,10,11,12,13
+left col (아래->위, 중복 제외): 14,15,16,17
+그리고 남은 모서리 안쪽 한 줄(우리가 24칸 맞추려고 사각형 안쪽 테두리 둘): 18,19,20,21,22,23
+=> 이건 실제로는 좀 빡세서, 여기서는 "24칸 링"을 하드코딩 배치할게.
+*/
+
+const pathOrder = [
+  // 바깥 테두리 시계방향 16칸 + 안쪽 8칸 해서 24칸
+  // 실제로는 5x5 기준 바깥 16칸 + 안쪽 8칸(3x3 테두리)
+  0,1,2,3,4, 9,14,19,24,23,22,21,20,15,10,5, 6,7,8,13,18,17,16,11
+];
+// 위 pathOrder는 "시계 방향으로 돈다"는 컨셉으로
+// 5x5 => 인덱스는 row*5+col 로 취급할 거라서
+// 0= (0,0), 1=(0,1), ..., 24=(4,4)
+// pathOrder 길이:
+const PATH_LEN = pathOrder.length; // 24칸
+
+// 각 칸(=교육 메시지) 정의
+// index는 path 상의 0~23번째칸에 해당하는 "게임 순번"
+const tilesData = [
+  // 0 START
+  {color:"green", title:"START", desc:"깨끗손 대모험 시작!\n비누로 30초 준비됐나요?", move:0},
+  {color:"blue",  title:"놀이터 다녀왔어요", desc:"바깥놀이 후엔 손씻기!", move:0},
+  {color:"red",   title:"비누가 없어요 😱", desc:"비누 없이 물만? 안돼요!\n1칸 뒤로 가요.", move:-1},
+  {color:"blue",  title:"손가락 사이 문질문질", desc:"거품으로 사이사이 깨끗!", move:0},
+  {color:"blue",  title:"식사 전", desc:"밥 먹기 전 손씻기 약속!", move:0},
+
+  {color:"blue",  title:"기침 했어요 🤧", desc:"기침 후엔 비누로 손씻기!", move:0},
+  {color:"blue",  title:"손톱 밑까지 쓱쓱", desc:"숨은 세균 안녕~", move:0},
+  {color:"red",   title:"눈 비볐어요", desc:"깨끗하지 않은 손은 눈금지!\n1칸 뒤로 가요.", move:-1},
+  {color:"blue",  title:"동물 만졌어요 🐶", desc:"강아지 만지고 손씻기!", move:0},
+
+  {color:"blue",  title:"엄지 돌려빨래 👍", desc:"엄지도 빙글빙글 깨끗!", move:+1},
+  {color:"blue",  title:"화장실 다녀온 후 🚽", desc:"비누로 30초!", move:0},
+  {color:"blue",  title:"친구랑 손잡았어요", desc:"함께 놀고 손씻기 잊지 않기", move:0},
+  {color:"red",   title:"몰래 대충 헹구기", desc:"물 잠깐은 부족해요.\n1칸 뒤로.", move:-1},
+  {color:"blue",  title:"손목까지 깨끗하게", desc:"손목까지 싹싹! 최고예요 ✨", move:0},
+  {color:"blue",  title:"간식 시간 🍎", desc:"깨끗한 손 = 더 맛있는 간식", move:0},
+  {color:"blue",  title:"콧물 닦았어요", desc:"휴지 버리고 손씻기까지 해야 끝!", move:0},
+
+  {color:"blue",  title:"코를 닦았어요", desc:"손도 같이 씻기!", move:0},
+  {color:"yellow",title:"30초 성공!", desc:"타이머 끝까지 기다렸어요!\n앞으로 2칸 이동!", move:+2},
+  {color:"blue",  title:"모래놀이 했어요", desc:"눈 비비기 전에 손씻기!", move:0},
+  {color:"red",   title:"손을 입에 넣었어요", desc:"세균이 몸속으로 들어갈 수도…\n1칸 뒤로.", move:-1},
+  {color:"blue",  title:"거품으로 세균 OUT", desc:"세균 도망가요!\n앞으로 1칸!", move:+1},
+  {color:"blue",  title:"수건으로 꾹꾹 닦기", desc:"일회용 타월이나 개인 수건 사용해요", move:0},
+  {color:"blue",  title:"친구에게 알려줬어요", desc:"“놀이 끝나면 손씻기!” 멋진 안내자 🥇", move:0},
+  {color:"yellow",title:"GOAL 🎉", desc:"깨끗손 챔피언!\n비누로 30초 손씻기 습관 완성!", move:0}
+];
+// tilesData.length === 24 이어야 한다
+// pathOrder.length === 24 이어야 한다
+// 마지막 칸(23)이 GOAL
+
+/* ---------------------------
+   보드 DOM 만들기 (5x5 grid)
+----------------------------*/
+const boardEl = document.getElementById("board");
+
+// 25칸(5x5) 그리되, 기본은 inner(비활성). 이후 pathOrder에 해당하는 칸만 tile 스타일 적용
+for(let cell=0; cell<25; cell++){
+  const div = document.createElement("div");
+  div.classList.add("tile","inner");
+  div.dataset.cellIndex = cell; // 0~24 grid index
+  boardEl.appendChild(div);
+}
+
+// pathOrder를 돌면서 실제 칸 정보 붙이기
+for(let pathIdx=0; pathIdx<PATH_LEN; pathIdx++){
+  const gridIndex = pathOrder[pathIdx]; // 0~24 중 하나
+  const tileInfo = tilesData[pathIdx];
+
+  const cellEl = boardEl.querySelector(`[data-cell-index="${gridIndex}"]`);
+  cellEl.classList.remove("inner");
+  cellEl.classList.add(tileInfo.color);
+
+  // index badge
+  const idxDiv = document.createElement("div");
+  idxDiv.classList.add("tile-index");
+  idxDiv.textContent = pathIdx; // 게임 순번
+  cellEl.appendChild(idxDiv);
+
+  // label
+  const labelDiv = document.createElement("div");
+  labelDiv.innerHTML = `
+    <div>${tileInfo.title}</div>
+  `;
+  cellEl.appendChild(labelDiv);
+}
+
+/* ---------------------------
+   게임 상태
+----------------------------*/
+let currentPlayer = 1; // 1 or 2
+let positions = {1:0, 2:0}; // path 상 위치 (0~23)
+let gameOver = false;
+
+/* UI elems */
+const diceBox = document.getElementById("diceResult");
+const rollBtn = document.getElementById("rollBtn");
+const messageTitle = document.getElementById("messageTitle");
+const messageBody = document.getElementById("messageBody");
+const p1PosText = document.getElementById("p1PosText");
+const p2PosText = document.getElementById("p2PosText");
+const currentPlayerBox = document.getElementById("currentPlayerBox");
+
+/* 플레이어 토큰 렌더 */
+function renderPlayers(){
+  // 기존 토큰 삭제
+  document.querySelectorAll(".player-token").forEach(el=>el.remove());
+
+  [1,2].forEach(p=>{
+    const pos = positions[p]; // path index
+    const gridIndex = pathOrder[pos]; // grid index (0~24)
+    const tileEl = boardEl.querySelector(`[data-cell-index="${gridIndex}"]`);
+    if(!tileEl) return;
+    const token = document.createElement("div");
+    token.classList.add("player-token", p===1?"p1":"p2");
+    // 두 명 겹칠 수 있으니 살짝 위치 나누자
+    if(p===1){
+      token.style.bottom="4px";
+      token.style.left="4px";
+    }else{
+      token.style.bottom="4px";
+      token.style.right="4px";
+    }
+    tileEl.appendChild(token);
+  });
+
+  p1PosText.textContent = positions[1];
+  p2PosText.textContent = positions[2];
+  currentPlayerBox.textContent = currentPlayer===1?"P1":"P2";
+}
+
+/* 타일 메시지 표시 */
+function showTileMessage(pathPos){
+  const tileInfo = tilesData[pathPos];
+  messageTitle.textContent = tileInfo.title;
+  messageBody.textContent = tileInfo.desc;
+}
+
+/* 이동 처리 */
+function movePlayer(steps){
+  if(gameOver) return;
+
+  const p = currentPlayer;
+  let newPos = positions[p] + steps;
+  if(newPos >= PATH_LEN-1) {
+    // 도착 혹은 넘김 -> GOAL
+    newPos = PATH_LEN-1;
+  }
+  positions[p] = newPos;
+
+  // 현재 칸 메시지
+  showTileMessage(newPos);
+
+  // 칸 효과(move)
+  const effect = tilesData[newPos].move || 0;
+  if(effect !== 0 && !gameOver){
+    let after = positions[p] + effect;
+    if(after < 0) after = 0;
+    if(after >= PATH_LEN-1) after = PATH_LEN-1;
+    positions[p] = after;
+    // 효과 적용 후 메시지 다시 갱신
+    showTileMessage(after);
+  }
+
+  renderPlayers();
+
+  // GOAL 체크
+  if(positions[p] === PATH_LEN-1){
+    gameOver = true;
+    messageTitle.textContent = "승리 🎉";
+    messageBody.textContent = (p===1 ? "P1" : "P2") +
+      " 깨끗손 챔피언!\n비누로 30초 손씻기 습관 완성!";
+    return;
+  }
+
+  // 턴 교체
+  currentPlayer = (currentPlayer===1)?2:1;
+  renderPlayers();
+}
+
+/* 주사위 이벤트 */
+rollBtn.addEventListener("click", ()=>{
+  if(gameOver) return;
+  const roll = Math.floor(Math.random()*6)+1; //1~6
+  diceBox.textContent = roll;
+  movePlayer(roll);
+});
+
+/* 초기 렌더 */
+renderPlayers();
+showTileMessage(0);
+</script>
+</body>
+</html>
