@@ -8,18 +8,17 @@
   :root {
     --line:#cddfee;
     --text:#1d2b3a;
-    --p1:#79c8ff;   /* 파랑말 */
-    --p2:#ff9ecd;   /* 핑크말 */
-    --tile-blue:#e9faff;
-    --tile-red:#fff1f1;
-    --tile-yellow:#fff7d9;
-    --tile-green:#e8fff1;
-    --tile-border-blue:#79c8ff;
-    --tile-border-red:#ffb4b4;
-    --tile-border-yellow:#ffd36a;
-    --tile-border-green:#9fe1ad;
+    --p1:#79c8ff;
+    --p2:#ff9ecd;
+    --tile-bg:#ffffff;
+    --tile-border:#cddfee;
+    --special-start:#e8fff1;
+    --special-goal:#fff7d9;
     --bg:#f5fbff;
+    --panel-bg:#ffffff;
   }
+
+  * { box-sizing:border-box; }
 
   body {
     font-family: "Pretendard", system-ui, -apple-system, BlinkMacSystemFont,
@@ -40,6 +39,7 @@
     margin: 0;
     line-height:1.4;
   }
+
   .subtitle {
     font-size: .8rem;
     text-align:center;
@@ -47,8 +47,7 @@
     line-height:1.4;
   }
 
-  /* layout */
-  .wrapper {
+  .layout {
     display:flex;
     flex-direction:column;
     gap:16px;
@@ -56,24 +55,23 @@
     max-width:900px;
   }
   @media(min-width:768px){
-    .wrapper {
+    .layout {
       flex-direction:row;
       align-items:flex-start;
     }
   }
 
-  /* board area */
-  .board-area{
+  /* BOARD AREA */
+  .board-wrapper {
     flex:1 1 auto;
     display:flex;
     justify-content:center;
   }
 
-  /* square board */
   .board {
     width: min(80vw,480px);
     height: min(80vw,480px);
-    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #e9f6ff 80%);
+    background:#fff;
     border: 2px solid var(--line);
     border-radius: 16px;
     box-shadow:0 20px 40px rgba(0,0,0,.05);
@@ -81,62 +79,50 @@
     display:grid;
     grid-template-columns: repeat(5,1fr);
     grid-template-rows: repeat(5,1fr);
+    gap:4px;
     padding:8px;
-    box-sizing:border-box;
+    background: radial-gradient(circle at 50% 40%, #ffffff 0%, #e9f6ff 80%);
     font-size:10px;
   }
 
-  /* tile style */
+  /* 기본 타일 */
   .tile {
-    position:relative;
-    border:2px solid var(--line);
+    background:var(--tile-bg);
+    border:2px solid var(--tile-border);
     border-radius:10px;
     padding:4px;
-    box-sizing:border-box;
+    font-size:10px;
+    font-weight:600;
+    line-height:1.2;
+    color:#1d2b3a;
+    position:relative;
     display:flex;
     justify-content:center;
     align-items:center;
     text-align:center;
-    line-height:1.2;
-    font-weight:500;
   }
 
-  .green { background:var(--tile-green); border-color:var(--tile-border-green); color:#2f6f33; font-weight:600;}
-  .blue  { background:var(--tile-blue); border-color:var(--tile-border-blue); color:#13506f; font-weight:600;}
-  .red   { background:var(--tile-red); border-color:var(--tile-border-red); color:#7a1d1d; font-weight:600;}
-  .yellow{ background:var(--tile-yellow); border-color:var(--tile-border-yellow); color:#6a4a00; font-weight:700;}
+  /* START/GOAL 칸 강조 */
+  .start-tile {
+    background:var(--special-start);
+    border-color:#9fe1ad;
+    color:#2f6f33;
+  }
+  .goal-tile {
+    background:var(--special-goal);
+    border-color:#ffd36a;
+    color:#6a4a00;
+  }
 
-  /* hide center tiles (only border should be visible) */
-  .inner {
-    background:transparent !important;
-    border:none !important;
-    box-shadow:none !important;
+  /* 가운데(보드 내부)는 비워두기 */
+  .empty {
+    background:transparent;
+    border:none;
+    box-shadow:none;
     pointer-events:none;
   }
 
-  /* player tokens */
-  .player-token {
-    position:absolute;
-    width:16px;
-    height:16px;
-    border-radius:50%;
-    border:2px solid #fff;
-    box-shadow:0 4px 8px rgba(0,0,0,.2);
-  }
-  .p1 { background:var(--p1); }
-  .p2 { background:var(--p2); }
-
-  .tile-index {
-    position:absolute;
-    top:2px;
-    left:4px;
-    font-size:8px;
-    line-height:1;
-    opacity:.5;
-    font-weight:600;
-  }
-
-  /* center label */
+  /* 중앙 안내 텍스트(로고영역 자리) */
   .center-label{
     position:absolute;
     top:50%;
@@ -165,10 +151,33 @@
     line-height:1.4;
   }
 
-  /* side panel */
+  /* player tokens */
+  .player-token {
+    position:absolute;
+    width:16px;
+    height:16px;
+    border-radius:50%;
+    border:2px solid #fff;
+    box-shadow:0 4px 8px rgba(0,0,0,.2);
+  }
+  .p1 { background:var(--p1); }
+  .p2 { background:var(--p2); }
+
+  /* small index badge (path step) */
+  .idx {
+    position:absolute;
+    top:2px;
+    left:4px;
+    font-size:8px;
+    line-height:1;
+    opacity:.4;
+    font-weight:600;
+  }
+
+  /* SIDE PANEL */
   .panel {
-    flex: 0 1 260px;
-    background:#fff;
+    flex:0 1 260px;
+    background:var(--panel-bg);
     border:2px solid var(--line);
     border-radius:16px;
     box-shadow:0 20px 40px rgba(0,0,0,.05);
@@ -189,12 +198,13 @@
     color:#234;
   }
 
-  .dice-row{
+  .row {
     display:flex;
     flex-wrap:wrap;
     align-items:center;
     gap:8px;
   }
+
   .value-box{
     min-width:36px;
     min-height:36px;
@@ -207,6 +217,7 @@
     align-items:center;
     justify-content:center;
   }
+
   #rollBtn{
     background:#1d90ff;
     border:none;
@@ -223,11 +234,13 @@
     transform:translateY(1px);
     box-shadow:0 4px 8px rgba(29,144,255,.2);
   }
+
   .players-status{
     display:flex;
     flex-wrap:wrap;
     gap:8px;
   }
+
   .player-card{
     flex:1 1 110px;
     background:#f9f9fb;
@@ -279,56 +292,124 @@
     white-space:pre-line;
   }
 
-  .guide-box{
-    background:#f6fbff;
-    border:2px solid #d8eafb;
-    border-radius:12px;
-    padding:10px;
-    font-size:11px;
-    line-height:1.4;
-    color:#13506f;
+  /* MODAL POPUP (퀴즈) */
+  .modal-overlay{
+    position:fixed;
+    left:0;top:0;right:0;bottom:0;
+    background:rgba(0,0,0,.4);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:16px;
+    z-index:999;
   }
-
-  .footer-note{
-    font-size:10px;
-    color:#4e6b86;
+  .modal{
+    background:#fff;
+    border-radius:16px;
+    max-width:320px;
+    width:100%;
+    border:2px solid var(--line);
+    box-shadow:0 24px 48px rgba(0,0,0,.25);
+    padding:16px;
+    font-size:14px;
     line-height:1.4;
+  }
+  .modal-title{
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .modal-question{
+    font-size:13px;
+    line-height:1.5;
+    margin-bottom:12px;
+    white-space:pre-line;
+  }
+  .choices{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-bottom:12px;
+  }
+  .choice-btn{
+    border:2px solid var(--line);
+    border-radius:10px;
+    padding:10px;
+    background:#fff;
+    font-size:13px;
+    text-align:left;
+    cursor:pointer;
+  }
+  .choice-btn.correct{
+    border-color:#43c16b;
+    background:#e8fff1;
+    color:#1c5a2e;
+    font-weight:600;
+  }
+  .choice-btn.wrong{
+    border-color:#ff7d7d;
+    background:#fff1f1;
+    color:#7a1d1d;
+    font-weight:600;
+  }
+  .modal-feedback{
+    font-size:12px;
+    line-height:1.4;
+    min-height:32px;
+    color:#4e6b86;
+    white-space:pre-line;
+    margin-bottom:12px;
+  }
+  .close-btn{
+    width:100%;
+    background:#1d90ff;
+    color:#fff;
+    border:none;
+    font-size:13px;
+    font-weight:600;
+    line-height:1;
+    padding:10px;
+    border-radius:10px;
+    cursor:pointer;
+    text-align:center;
+  }
+  .close-btn:active{
+    transform:translateY(1px);
+    box-shadow:0 4px 8px rgba(29,144,255,.4);
   }
 
 </style>
 </head>
 <body>
-
 <h1>깨끗손 부루마블 🧼</h1>
 <div class="subtitle">
-  비누로 30초 이상 손 씻기! 감염병을 막는 가장 쉬운 습관<br/>
-  2인용 턴제 보드게임
+  주사위를 굴려 한 칸씩 이동해요.<br/>
+  도착한 칸의 손씻기 퀴즈에 답해볼까요?
 </div>
 
-<div class="wrapper">
-
-  <div class="board-area">
+<div class="layout">
+  <!-- BOARD -->
+  <div class="board-wrapper">
     <div class="board" id="board">
-      <!-- 타일들은 JS로 채움 -->
+      <!-- 중앙 라벨(원하면 로고/이미지로 바꿔도 됨) -->
       <div class="center-label">
         <div class="center-label-title">세계 손씻기의 날</div>
         <div class="center-label-sub">
-          손바닥 → 손등 → 손가락 사이 → 손톱 밑 → 엄지 → 손목<br/>
-          흐르는 물에 비누로 30초 🧼
+          흐르는 물에 비누로 30초 🧼<br/>
+          손바닥 → 손등 → 손가락 사이 → 손톱 밑 → 엄지 → 손목
         </div>
       </div>
     </div>
   </div>
 
+  <!-- SIDE PANEL -->
   <div class="panel">
     <div class="section-title">🎲 주사위 & 진행</div>
-
-    <div class="dice-row">
+    <div class="row">
       <div>현재 차례:</div>
       <div class="value-box" id="currentPlayerBox">P1</div>
     </div>
-
-    <div class="dice-row">
+    <div class="row">
       <div>주사위:</div>
       <div class="value-box" id="diceResult">-</div>
       <button id="rollBtn">주사위 굴리기</button>
@@ -352,136 +433,332 @@
       </div>
     </div>
 
-    <div class="section-title">📢 이번 칸 미션</div>
+    <div class="section-title">📢 현재 칸</div>
     <div class="message-box">
-      <div class="message-title" id="messageTitle">게임 설명</div>
+      <div class="message-title" id="messageTitle">게임 시작</div>
       <div class="message-body" id="messageBody">
-        주사위를 눌러 이동해요.
-        먼저 GOAL 도착한 사람이 승리!
+        START 칸입니다.
+        주사위를 눌러 이동해요!
       </div>
     </div>
-
-    <div class="guide-box">
-      언제 손을 씻을까요?<br/>
-      🍽 식사·간식 전<br/>
-      🚽 화장실 다녀온 후<br/>
-      🤧 기침/콧물 닦은 후<br/>
-      🛝 바깥놀이 후<br/>
-      🐶 동물 만진 후
-    </div>
-
-    <div class="footer-note">
-      흐르는 물에 비누로 30초 동안<br/>
-      손바닥 → 손등 → 손가락 사이 → 손톱 밑 → 엄지 → 손목까지 깨끗하게 ✨
-    </div>
   </div>
+</div>
 
+<!-- MODAL: 퀴즈 팝업 -->
+<div class="modal-overlay" id="quizModal">
+  <div class="modal">
+    <div class="modal-title" id="quizTitle">퀴즈 제목</div>
+    <div class="modal-question" id="quizQuestion">질문 내용</div>
+    <div class="choices" id="choicesContainer"></div>
+    <div class="modal-feedback" id="quizFeedback"></div>
+    <button class="close-btn" id="closeQuizBtn">닫기</button>
+  </div>
 </div>
 
 <script>
-/*
-보드를 부루마블 형태로 돌리는 순서(0~23까지 총 24칸 예시).
-우리는 5x5 격자에서 테두리만 사용.
-인덱스 배치는 시계방향으로:
-top row (왼->오) : 0,1,2,3,4
-right col (위->아래, 중복 제외) : 5,6,7,8
-bottom row (오->왼, 중복 제외): 9,10,11,12,13
-left col (아래->위, 중복 제외): 14,15,16,17
-그리고 남은 모서리 안쪽 한 줄(우리가 24칸 맞추려고 사각형 안쪽 테두리 둘): 18,19,20,21,22,23
-=> 이건 실제로는 좀 빡세서, 여기서는 "24칸 링"을 하드코딩 배치할게.
+/* =====================
+   경로 구성
+   =====================
+
+우리는 5x5 그리드(0~24 index)를 쓸 거고,
+테두리만 실제 칸으로 사용해 한 바퀴 도는 구조로 갈게.
+
+gridIndex = row*5+col
+
+테두리 순서(시계방향):
+(4,4) START -> ... -> 다시 (4,4) GOAL 느낌.
+즉 START와 GOAL은 같은 칸인데
+'한 바퀴 완료했는지'로 GOAL 판정.
+
+경로:
+아래줄 오른→왼, 왼쪽 위로, 위쪽 왼→오, 오른쪽 아래로 다시 출발지 근처
+
+경로 인덱스:
+(4,4)=24 START
+(4,3)=23
+(4,2)=22
+(4,1)=21
+(4,0)=20
+(3,0)=15
+(2,0)=10
+(1,0)=5
+(0,0)=0
+(0,1)=1
+(0,2)=2
+(0,3)=3
+(0,4)=4
+(1,4)=9
+(2,4)=14
+(3,4)=19
+(4,4)=24 다시 도착 → GOAL
+
+=> 총 17스텝이지만 우리는 "중복 없이" 돌고 싶으니까
+(4,4) 중복을 빼고 경로를 linear하게 만들면:
+[24,23,22,21,20,15,10,5,0,1,2,3,4,9,14,19] 16칸 + 마지막에 다시 24로 돌아오면 골인.
+
+즉: pathIndex 0~15 까지 진행 후
+다음 이동으로 다시 24에 오면 GOAL.
 */
 
 const pathOrder = [
-  // 바깥 테두리 시계방향 16칸 + 안쪽 8칸 해서 24칸
-  // 실제로는 5x5 기준 바깥 16칸 + 안쪽 8칸(3x3 테두리)
-  0,1,2,3,4, 9,14,19,24,23,22,21,20,15,10,5, 6,7,8,13,18,17,16,11
+  24,23,22,21,20,15,10,5,0,1,2,3,4,9,14,19
 ];
-// 위 pathOrder는 "시계 방향으로 돈다"는 컨셉으로
-// 5x5 => 인덱스는 row*5+col 로 취급할 거라서
-// 0= (0,0), 1=(0,1), ..., 24=(4,4)
-// pathOrder 길이:
-const PATH_LEN = pathOrder.length; // 24칸
+// pathOrder[0] = 24(START tile gridIndex)
+// pathOrder[last] = 19, 그리고 다음 칸은 다시 24로 가면 GOAL
 
-// 각 칸(=교육 메시지) 정의
-// index는 path 상의 0~23번째칸에 해당하는 "게임 순번"
+// 칸 타이틀(보드에 적힐 짧은 이름) + 퀴즈 데이터
+// 각 path 위치별로 하나씩
 const tilesData = [
-  // 0 START
-  {color:"green", title:"START", desc:"깨끗손 대모험 시작!\n비누로 30초 준비됐나요?", move:0},
-  {color:"blue",  title:"놀이터 다녀왔어요", desc:"바깥놀이 후엔 손씻기!", move:0},
-  {color:"red",   title:"비누가 없어요 😱", desc:"비누 없이 물만? 안돼요!\n1칸 뒤로 가요.", move:-1},
-  {color:"blue",  title:"손가락 사이 문질문질", desc:"거품으로 사이사이 깨끗!", move:0},
-  {color:"blue",  title:"식사 전", desc:"밥 먹기 전 손씻기 약속!", move:0},
-
-  {color:"blue",  title:"기침 했어요 🤧", desc:"기침 후엔 비누로 손씻기!", move:0},
-  {color:"blue",  title:"손톱 밑까지 쓱쓱", desc:"숨은 세균 안녕~", move:0},
-  {color:"red",   title:"눈 비볐어요", desc:"깨끗하지 않은 손은 눈금지!\n1칸 뒤로 가요.", move:-1},
-  {color:"blue",  title:"동물 만졌어요 🐶", desc:"강아지 만지고 손씻기!", move:0},
-
-  {color:"blue",  title:"엄지 돌려빨래 👍", desc:"엄지도 빙글빙글 깨끗!", move:+1},
-  {color:"blue",  title:"화장실 다녀온 후 🚽", desc:"비누로 30초!", move:0},
-  {color:"blue",  title:"친구랑 손잡았어요", desc:"함께 놀고 손씻기 잊지 않기", move:0},
-  {color:"red",   title:"몰래 대충 헹구기", desc:"물 잠깐은 부족해요.\n1칸 뒤로.", move:-1},
-  {color:"blue",  title:"손목까지 깨끗하게", desc:"손목까지 싹싹! 최고예요 ✨", move:0},
-  {color:"blue",  title:"간식 시간 🍎", desc:"깨끗한 손 = 더 맛있는 간식", move:0},
-  {color:"blue",  title:"콧물 닦았어요", desc:"휴지 버리고 손씻기까지 해야 끝!", move:0},
-
-  {color:"blue",  title:"코를 닦았어요", desc:"손도 같이 씻기!", move:0},
-  {color:"yellow",title:"30초 성공!", desc:"타이머 끝까지 기다렸어요!\n앞으로 2칸 이동!", move:+2},
-  {color:"blue",  title:"모래놀이 했어요", desc:"눈 비비기 전에 손씻기!", move:0},
-  {color:"red",   title:"손을 입에 넣었어요", desc:"세균이 몸속으로 들어갈 수도…\n1칸 뒤로.", move:-1},
-  {color:"blue",  title:"거품으로 세균 OUT", desc:"세균 도망가요!\n앞으로 1칸!", move:+1},
-  {color:"blue",  title:"수건으로 꾹꾹 닦기", desc:"일회용 타월이나 개인 수건 사용해요", move:0},
-  {color:"blue",  title:"친구에게 알려줬어요", desc:"“놀이 끝나면 손씻기!” 멋진 안내자 🥇", move:0},
-  {color:"yellow",title:"GOAL 🎉", desc:"깨끗손 챔피언!\n비누로 30초 손씻기 습관 완성!", move:0}
+  {
+    label:"START",
+    start:true,
+    quiz:{
+      title:"시작!",
+      question:"깨끗한 손으로 건강 지키기 모험을 시작해요!",
+      type:"info",
+      choices:[],
+      answerIndex:null,
+      feedback:"주사위를 굴려 앞으로 가요!"
+    }
+  },
+  {
+    label:"언제 씻지?",
+    quiz:{
+      title:"언제 손을 씻어야 할까요?",
+      question:"다음 중 손을 꼭 씻어야 하는 때는?\n1) 밥 먹기 전\n2) 장난감 보기 전",
+      type:"mcq",
+      choices:["밥 먹기 전","장난감 보기 전"],
+      answerIndex:0,
+      feedback:"식사하거나 간식 먹기 전엔 손을 깨끗하게 씻어요 🍽"
+    }
+  },
+  {
+    label:"O / X",
+    quiz:{
+      title:"O / X 문제",
+      question:"화장실 다녀온 뒤에는 손을 씻지 않아도 된다.",
+      type:"ox",
+      choices:["O (맞아요)","X (아니에요)"],
+      answerIndex:1,
+      feedback:"화장실 다녀온 후에는 꼭 비누로 30초 손씻기! 🚽🧼"
+    }
+  },
+  {
+    label:"비누 꼭?",
+    quiz:{
+      title:"비누가 왜 필요할까?",
+      question:"손에 묻은 세균을 잘 없애주는 것은 무엇일까요?\n1) 비누와 물\n2) 바람 쐬기",
+      type:"mcq",
+      choices:["비누와 물","바람 쐬기"],
+      answerIndex:0,
+      feedback:"흐르는 물 + 비누로 문질문질 해야 세균이 잘 떨어져요 🧼💦"
+    }
+  },
+  {
+    label:"기침했어",
+    quiz:{
+      title:"기침 후에는?",
+      question:"내가 손으로 입을 가리고 기침했어요.\n그 다음 해야 할 일은?",
+      type:"mcq",
+      choices:["손씻기","아무 것도 안 하기"],
+      answerIndex:0,
+      feedback:"기침·콧물 뒤엔 손씻기로 감염병을 막아요 🤧➡🧼"
+    }
+  },
+  {
+    label:"코 만졌어",
+    quiz:{
+      title:"콧물 닦은 뒤",
+      question:"콧물을 닦았을 땐?\n1) 그냥 놀이 계속하기\n2) 손을 씻기",
+      type:"mcq",
+      choices:["그냥 놀이 계속하기","손을 씻기"],
+      answerIndex:1,
+      feedback:"콧물 닦은 뒤엔 손을 깨끗하게 씻어야 해요 👃🧼"
+    }
+  },
+  {
+    label:"바깥놀이 후",
+    quiz:{
+      title:"놀이터 다녀온 뒤",
+      question:"모래놀이, 미끄럼틀 놀이 후에는?\nO) 손씻기\nX) 그냥 간식 먹기",
+      type:"ox",
+      choices:["O 손씻기","X 그냥 먹기"],
+      answerIndex:0,
+      feedback:"바깥놀이 후엔 손을 씻고 눈·입을 만지지 않아요 🛝"
+    }
+  },
+  {
+    label:"동물 만졌어",
+    quiz:{
+      title:"강아지 쓰담쓰담🐶",
+      question:"강아지/고양이 만진 뒤, 바로 손가락 빨아도 될까?",
+      type:"mcq",
+      choices:["응 괜찮아","아니, 손씻고 먹어야 해"],
+      answerIndex:1,
+      feedback:"동물 만진 뒤엔 꼭 손을 씻고 음식 만지기 🐶🧼"
+    }
+  },
+  {
+    label:"손가락 사이",
+    quiz:{
+      title:"깨끗하게 씻는 방법",
+      question:"손바닥만 살짝 씻으면 될까?\n아니면 손가락 사이까지 꾹꾹 씻어야 할까?",
+      type:"mcq",
+      choices:["손바닥만","손가락 사이까지"],
+      answerIndex:1,
+      feedback:"손가락 사이, 손톱 밑까지 ‘문질문질’ 해야 깨끗해요 ✨"
+    }
+  },
+  {
+    label:"30초 기다려",
+    quiz:{
+      title:"얼마나 씻을까?",
+      question:"손씻기는 몇 초 동안 하는 게 좋을까요?\n1) 3초\n2) 30초",
+      type:"mcq",
+      choices:["3초","30초"],
+      answerIndex:1,
+      feedback:"비누로 30초 동안 천천히 문질러요. 타이머 ‘띠링’까지! ⏱"
+    }
+  },
+  {
+    label:"비누 거품",
+    quiz:{
+      title:"거품의 힘",
+      question:"비누 거품은 세균을 떼어내는 데 도움을 줄까요?",
+      type:"ox",
+      choices:["O 도움이 돼요","X 전혀 필요없어요"],
+      answerIndex:0,
+      feedback:"거품이 세균을 떼어내고 물이 씻어내요 🫧"
+    }
+  },
+  {
+    label:"손목까지",
+    quiz:{
+      title:"손 어디까지 씻어요?",
+      question:"손가락만 씻으면 될까요?\n아니면 손목까지 씻어야 할까요?",
+      type:"mcq",
+      choices:["손가락만","손목까지 싹싹"],
+      answerIndex:1,
+      feedback:"손목까지 돌려 씻어주면 더 깨끗해요 💪🧼"
+    }
+  },
+  {
+    label:"친구랑 같이",
+    quiz:{
+      title:"친구와 약속",
+      question:"친구에게 ‘밥 먹기 전에는 손 씻자!’ 라고 말해주는 건 좋은 걸까?",
+      type:"ox",
+      choices:["O 좋은 행동","X 쓸데없어"],
+      answerIndex:0,
+      feedback:"함께 알려주면 친구도 건강해져요 👫"
+    }
+  },
+  {
+    label:"눈 비비지 않기",
+    quiz:{
+      title:"더러운 손으로 눈 만지면?",
+      question:"놀이터에서 놀고 그대로 눈을 비비면 어떻게 될까?",
+      type:"mcq",
+      choices:["세균이 들어갈 수 있어요","아무 일도 안 생겨요"],
+      answerIndex:0,
+      feedback:"더러운 손이 눈·코·입에 닿으면 세균이 몸속으로 들어갈 수 있어요 👀"
+    }
+  },
+  {
+    label:"수건으로 꾹",
+    quiz:{
+      title:"손 닦을 때",
+      question:"손을 다 씻은 다음에는?\n1) 바지에 슥슥\n2) 개인수건/일회용 타월로 꾹꾹",
+      type:"mcq",
+      choices:["바지에 슥슥","개인수건/일회용 타월"],
+      answerIndex:1,
+      feedback:"깨끗한 수건으로 꾹꾹 닦아요 🧻"
+    }
+  },
+  {
+    label:"거의 다 왔어",
+    quiz:{
+      title:"GOAL 직전!",
+      question:"조금만 더 가면 깨끗손 챔피언!\n준비됐나요?",
+      type:"info",
+      choices:[],
+      answerIndex:null,
+      feedback:"마지막 한 칸만 더 가요!"
+    }
+  }
 ];
-// tilesData.length === 24 이어야 한다
-// pathOrder.length === 24 이어야 한다
-// 마지막 칸(23)이 GOAL
 
-/* ---------------------------
-   보드 DOM 만들기 (5x5 grid)
-----------------------------*/
+// 손씻기 6단계 안내 (GOAL 도착 시)
+const finalPopup = {
+  title:"축하해요! 깨끗손 챔피언 🎉",
+  question:
+    "손씻기 6단계 기억해볼까요?\n\n" +
+    "1. 손바닥 문질문질\n" +
+    "2. 손등도 쓱쓱\n" +
+    "3. 손가락 사이 사이 꼼꼼하게\n" +
+    "4. 손톱 밑 꾹꾹 문지르기\n" +
+    "5. 엄지손가락 빙글빙글\n" +
+    "6. 손목까지 싹싹\n\n" +
+    "흐르는 물에 비누로 30초!",
+  type:"info",
+  choices:[],
+  answerIndex:null,
+  feedback:"너랑 함께라서 더 안전해졌어 🧼💖"
+};
+
+/* =====================
+   보드 DOM 생성
+   =====================*/
+
 const boardEl = document.getElementById("board");
 
-// 25칸(5x5) 그리되, 기본은 inner(비활성). 이후 pathOrder에 해당하는 칸만 tile 스타일 적용
+// 25칸 만들기 (5x5). 전부 기본적으로 empty로 깔고,
+// pathOrder에 해당하는 칸만 실제 타일로 바꿈.
 for(let cell=0; cell<25; cell++){
-  const div = document.createElement("div");
-  div.classList.add("tile","inner");
-  div.dataset.cellIndex = cell; // 0~24 grid index
-  boardEl.appendChild(div);
+  const d=document.createElement("div");
+  d.classList.add("tile","empty");
+  d.dataset.gridIndex = cell; // 0~24
+  boardEl.appendChild(d);
 }
 
-// pathOrder를 돌면서 실제 칸 정보 붙이기
-for(let pathIdx=0; pathIdx<PATH_LEN; pathIdx++){
-  const gridIndex = pathOrder[pathIdx]; // 0~24 중 하나
-  const tileInfo = tilesData[pathIdx];
+// pathOrder에 따라 표시
+for(let step=0; step<pathOrder.length; step++){
+  const gridIdx = pathOrder[step]; // 24,23,22...
+  const tileEl = boardEl.querySelector(`[data-grid-index="${gridIdx}"]`);
+  tileEl.classList.remove("empty");
 
-  const cellEl = boardEl.querySelector(`[data-cell-index="${gridIndex}"]`);
-  cellEl.classList.remove("inner");
-  cellEl.classList.add(tileInfo.color);
+  // START 칸 (path step 0)
+  if(step===0){
+    tileEl.classList.add("start-tile");
+  }
+  // 마지막 path step (pathOrder[pathOrder.length-1])은 GOAL로 가기 직전 칸
+  if(step===pathOrder.length-1){
+    tileEl.classList.add("goal-tile");
+  }
 
-  // index badge
-  const idxDiv = document.createElement("div");
-  idxDiv.classList.add("tile-index");
-  idxDiv.textContent = pathIdx; // 게임 순번
-  cellEl.appendChild(idxDiv);
+  // idx badge + label
+  const idxDiv=document.createElement("div");
+  idxDiv.classList.add("idx");
+  idxDiv.textContent = step;
+  tileEl.appendChild(idxDiv);
 
-  // label
-  const labelDiv = document.createElement("div");
-  labelDiv.innerHTML = `
-    <div>${tileInfo.title}</div>
-  `;
-  cellEl.appendChild(labelDiv);
+  const labelDiv=document.createElement("div");
+  labelDiv.style.fontSize="10px";
+  labelDiv.style.fontWeight="600";
+  labelDiv.style.textAlign="center";
+  labelDiv.textContent = tilesData[step].label;
+  tileEl.appendChild(labelDiv);
 }
 
-/* ---------------------------
+/* =====================
    게임 상태
-----------------------------*/
+   =====================*/
 let currentPlayer = 1; // 1 or 2
-let positions = {1:0, 2:0}; // path 상 위치 (0~23)
+let pos = {1:0, 2:0};  // path index 위치 (0~마지막)
+let finished = {1:false, 2:false};
 let gameOver = false;
 
-/* UI elems */
+// UI refs
 const diceBox = document.getElementById("diceResult");
 const rollBtn = document.getElementById("rollBtn");
 const messageTitle = document.getElementById("messageTitle");
@@ -490,76 +767,143 @@ const p1PosText = document.getElementById("p1PosText");
 const p2PosText = document.getElementById("p2PosText");
 const currentPlayerBox = document.getElementById("currentPlayerBox");
 
-/* 플레이어 토큰 렌더 */
+// modal refs
+const quizModal = document.getElementById("quizModal");
+const quizTitle = document.getElementById("quizTitle");
+const quizQuestion = document.getElementById("quizQuestion");
+const quizFeedback = document.getElementById("quizFeedback");
+const choicesContainer = document.getElementById("choicesContainer");
+const closeQuizBtn = document.getElementById("closeQuizBtn");
+
+/* 플레이어 말 그리기 */
 function renderPlayers(){
-  // 기존 토큰 삭제
-  document.querySelectorAll(".player-token").forEach(el=>el.remove());
+  // 이전 토큰 삭제
+  document.querySelectorAll(".player-token").forEach(n=>n.remove());
 
   [1,2].forEach(p=>{
-    const pos = positions[p]; // path index
-    const gridIndex = pathOrder[pos]; // grid index (0~24)
-    const tileEl = boardEl.querySelector(`[data-cell-index="${gridIndex}"]`);
+    const pathIdx = pos[p];
+    const gridIdx = pathOrder[pathIdx];
+    const tileEl = boardEl.querySelector(`[data-grid-index="${gridIdx}"]`);
     if(!tileEl) return;
-    const token = document.createElement("div");
+    const token=document.createElement("div");
     token.classList.add("player-token", p===1?"p1":"p2");
-    // 두 명 겹칠 수 있으니 살짝 위치 나누자
+
+    // 두 명 겹치면 좌우로 살짝 나눠
     if(p===1){
       token.style.bottom="4px";
       token.style.left="4px";
-    }else{
+    } else {
       token.style.bottom="4px";
       token.style.right="4px";
     }
     tileEl.appendChild(token);
   });
 
-  p1PosText.textContent = positions[1];
-  p2PosText.textContent = positions[2];
+  p1PosText.textContent = pos[1];
+  p2PosText.textContent = pos[2];
   currentPlayerBox.textContent = currentPlayer===1?"P1":"P2";
 }
 
-/* 타일 메시지 표시 */
-function showTileMessage(pathPos){
-  const tileInfo = tilesData[pathPos];
-  messageTitle.textContent = tileInfo.title;
-  messageBody.textContent = tileInfo.desc;
+/* 칸 정보 표시 + 퀴즈 모달 띄우기 */
+function arriveTile(player){
+  const step = pos[player];
+  const tileInfo = tilesData[step];
+
+  // 사이드 패널 현재칸 표시
+  messageTitle.textContent = tileInfo.label;
+  messageBody.textContent = tileInfo.quiz.feedback || tileInfo.quiz.question || "";
+
+  // GOAL 체크:
+  // GOAL은 "한 바퀴 돌아서 다시 START지점(=gridIdx 24)" 오면.
+  // 우리의 path 마지막 index는 pathOrder.length-1.
+  // 그 다음에 다시 START(24)로 오면 finish(true)
+  // 구현: 만약 현재가 pathOrder.length-1 이고 주사위가 앞으로 가서
+  // 다시 START(0) 이상 넘어갔다면 finish로 처리해야 함.
+  // 간단화: 플레이어가 마지막 칸(path 마지막 index)을 지나 앞으로 더 가려고 할 때 finish.
+  // => move 단계에서 처리.
+
+  // 퀴즈 모달 띄우기
+  openQuizModal(tileInfo.quiz);
 }
+
+/* 퀴즈 모달 구성 */
+function openQuizModal(quiz){
+  quizModal.style.display="flex";
+  quizTitle.textContent = quiz.title;
+  quizQuestion.textContent = quiz.question;
+  quizFeedback.textContent = "";
+  choicesContainer.innerHTML = "";
+
+  // type info이면 닫기만
+  if(quiz.type==="info"){
+    closeQuizBtn.textContent="확인";
+    return;
+  }
+
+  closeQuizBtn.textContent="닫기";
+
+  quiz.choices.forEach((choiceText, idx)=>{
+    const btn=document.createElement("button");
+    btn.classList.add("choice-btn");
+    btn.textContent = choiceText;
+    btn.addEventListener("click",()=>{
+      const correct = (idx===quiz.answerIndex);
+      if(correct){
+        btn.classList.add("correct");
+        quizFeedback.textContent = quiz.feedback || "정답!";
+      }else{
+        btn.classList.add("wrong");
+        quizFeedback.textContent = "다시 한번 생각해볼까?\n" + (quiz.feedback||"");
+      }
+    });
+    choicesContainer.appendChild(btn);
+  });
+}
+
+/* 최종(손씻기 6단계) 모달 */
+function openFinalModal(){
+  quizModal.style.display="flex";
+  quizTitle.textContent = finalPopup.title;
+  quizQuestion.textContent = finalPopup.question;
+  quizFeedback.textContent = finalPopup.feedback;
+  choicesContainer.innerHTML = "";
+  closeQuizBtn.textContent="완료";
+}
+
+/* 모달 닫기 */
+closeQuizBtn.addEventListener("click",()=>{
+  quizModal.style.display="none";
+});
 
 /* 이동 처리 */
 function movePlayer(steps){
   if(gameOver) return;
 
-  const p = currentPlayer;
-  let newPos = positions[p] + steps;
-  if(newPos >= PATH_LEN-1) {
-    // 도착 혹은 넘김 -> GOAL
-    newPos = PATH_LEN-1;
+  const p=currentPlayer;
+  let newPos = pos[p] + steps;
+
+  // 아직 안 끝난 플레이어만 이동
+  if(finished[p]){
+    // 이미 골인했으면 그냥 차례 넘김
+  } else {
+    // 만약 path 끝(마지막 인덱스 15)을 넘으면 -> GOAL 도착으로 처리
+    if(newPos > pathOrder.length-1){
+      newPos = 0; // 다시 START 위치로 돌아온 거라고 간주
+      finished[p]=true;
+      pos[p]=newPos;
+      renderPlayers();
+      openFinalModal();
+    } else {
+      // 정상 이동
+      pos[p]=newPos;
+      renderPlayers();
+      arriveTile(p);
+    }
   }
-  positions[p] = newPos;
 
-  // 현재 칸 메시지
-  showTileMessage(newPos);
-
-  // 칸 효과(move)
-  const effect = tilesData[newPos].move || 0;
-  if(effect !== 0 && !gameOver){
-    let after = positions[p] + effect;
-    if(after < 0) after = 0;
-    if(after >= PATH_LEN-1) after = PATH_LEN-1;
-    positions[p] = after;
-    // 효과 적용 후 메시지 다시 갱신
-    showTileMessage(after);
-  }
-
-  renderPlayers();
-
-  // GOAL 체크
-  if(positions[p] === PATH_LEN-1){
-    gameOver = true;
-    messageTitle.textContent = "승리 🎉";
-    messageBody.textContent = (p===1 ? "P1" : "P2") +
-      " 깨끗손 챔피언!\n비누로 30초 손씻기 습관 완성!";
-    return;
+  // 모두 끝났는지 체크
+  if(finished[1] && finished[2]){
+    gameOver=true;
   }
 
   // 턴 교체
@@ -567,17 +911,18 @@ function movePlayer(steps){
   renderPlayers();
 }
 
-/* 주사위 이벤트 */
-rollBtn.addEventListener("click", ()=>{
+/* 주사위 버튼 */
+const diceEl = document.getElementById("diceResult");
+rollBtn.addEventListener("click",()=>{
   if(gameOver) return;
-  const roll = Math.floor(Math.random()*6)+1; //1~6
-  diceBox.textContent = roll;
+  const roll = Math.floor(Math.random()*6)+1;
+  diceEl.textContent = roll;
   movePlayer(roll);
 });
 
 /* 초기 렌더 */
 renderPlayers();
-showTileMessage(0);
+arriveTile(1); // 처음 안내(START)
 </script>
 </body>
 </html>
