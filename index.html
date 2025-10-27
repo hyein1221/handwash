@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-<title>깨끗손 부루마블 🧼</title>
+<title>손씻기 게임🧼</title>
 <style>
   :root {
     --line:#cddfee;
@@ -465,17 +465,17 @@
     z-index:950;
     display:none;
   }
-  .burst {
-    position:absolute;
-    width:6px;
-    height:6px;
-    border-radius:50%;
-    animation: pop 700ms ease-out forwards;
-  }
-  @keyframes pop {
-    0%   { transform:translate(0,0) scale(1); opacity:1; }
-    100% { transform:translate(var(--dx),var(--dy)) scale(0.2); opacity:0; }
-  }
+ .burst {
+  position:absolute;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  animation: pop 700ms ease-out forwards;
+}
+@keyframes pop {
+  0%   { transform:translate(0,0) scale(1); opacity:1; }
+  100% { transform:translate(var(--dx),var(--dy)) scale(0.2); opacity:0; }
+}
 
   /* Footer info */
   .footer-info {
@@ -489,7 +489,7 @@
 </style>
 </head>
 <body>
-<h1>깨끗손 부루마블 🧼</h1>
+<h1>손씻기 게임🧼</h1>
 <div class="subtitle">
   주사위를 굴려 앞으로 이동해요.<br/>
   도착한 칸의 손씻기 퀴즈에 답해볼까요?
@@ -619,10 +619,10 @@ const tilesData = [
     }
   },
   {
-    label:"언제 씻지?",
+    label:"손은 언제 씻지?",
     quiz:{
       title:"언제 손을 씻어야 할까요?",
-      question:"다음 중 손을 꼭 씻어야 하는 때는?\n1) 밥 먹기 전\n2) 장난감 보기 전",
+      question:"다음 중 손을 꼭 씻어야 하는 때는?\n1) 밥 먹기 전\n2) 춤추기 전",
       type:"mcq",
       choices:["밥 먹기 전","장난감 보기 전"],
       answerIndex:0,
@@ -630,9 +630,9 @@ const tilesData = [
     }
   },
   {
-    label:"O / X",
+    label:"화장실 다녀온 후에는?",
     quiz:{
-      title:"O / X 문제",
+      title:"화장실 다녀온 후에는?",
       question:"화장실 다녀온 뒤에는 손을 씻지 않아도 된다.",
       type:"ox",
       choices:["O (맞아요)","X (아니에요)"],
@@ -641,7 +641,7 @@ const tilesData = [
     }
   },
   {
-    label:"비누 꼭?",
+    label:"비누가 왜 필요할까?",
     quiz:{
       title:"비누가 왜 필요할까?",
       question:"세균을 잘 없애주는 것은?\n1) 비누와 물\n2) 바람 쐬기",
@@ -652,7 +652,7 @@ const tilesData = [
     }
   },
   {
-    label:"기침했어",
+    label:"기침 후에는?",
     quiz:{
       title:"기침 후에는?",
       question:"내가 손으로 입을 가리고 기침했어요.\n그 다음 해야 할 일은?",
@@ -663,9 +663,9 @@ const tilesData = [
     }
   },
   {
-    label:"코 만졌어",
+    label:"콧물 닦은 후에는?",
     quiz:{
-      title:"콧물 닦은 뒤",
+      title:"콧물 닦은 후에는?",
       question:"콧물을 닦았을 땐?\n1) 그냥 놀이 계속하기\n2) 손을 씻기",
       type:"mcq",
       choices:["그냥 놀이 계속하기","손을 씻기"],
@@ -674,10 +674,10 @@ const tilesData = [
     }
   },
   {
-    label:"바깥놀이 후",
+    label:"바깥놀이 후에는?",
     quiz:{
-      title:"놀이터 다녀온 뒤",
-      question:"모래놀이 후엔?\nO) 손씻기\nX) 그냥 간식 먹기",
+      title:"바깥놀이 후에는?",
+      question:"바깥놀이 후에는?\nO) 손씻기\nX) 그냥 간식 먹기",
       type:"ox",
       choices:["O 손씻기","X 그냥 먹기"],
       answerIndex:0,
@@ -685,10 +685,10 @@ const tilesData = [
     }
   },
   {
-    label:"동물 만졌어",
+    label:"동물을 만진 후에는?",
     quiz:{
       title:"강아지 쓰담쓰담🐶",
-      question:"강아지/고양이 만진 뒤, 바로 손가락 빨아도 될까?",
+      question:"강아지/고양이 만진 뒤, 바로 음식을 먹어도 될까?",
       type:"mcq",
       choices:["응 괜찮아","아니, 손씻고 먹어야 해"],
       answerIndex:1,
@@ -696,7 +696,7 @@ const tilesData = [
     }
   },
   {
-    label:"손가락 사이",
+    label:"어떻게 손을 씻지?",
     quiz:{
       title:"어디까지 씻어?",
       question:"손바닥만 살짝 씻으면 될까?\n아니면 손가락 사이까지 꾹꾹 씻어야 할까?",
@@ -707,7 +707,7 @@ const tilesData = [
     }
   },
   {
-    label:"30초 기다려",
+    label:"손을 얼마나 씻어야할까?",
     quiz:{
       title:"얼마나 씻을까?",
       question:"손씻기는 몇 초 동안 하는 게 좋을까요?\n1) 3초\n2) 30초",
@@ -729,7 +729,7 @@ const tilesData = [
     }
   },
   {
-    label:"손목까지",
+    label:"어디까지 씻어야할까?",
     quiz:{
       title:"손 어디까지 씻어요?",
       question:"손가락만 씻으면 될까요?\n아니면 손목까지 씻어야 할까요?",
@@ -740,18 +740,18 @@ const tilesData = [
     }
   },
   {
-    label:"친구랑 같이",
+    label:"친구와 함께해요",
     quiz:{
       title:"친구와 약속",
       question:"친구에게 '밥 먹기 전엔 손 씻자!'라고 말해주는 건 좋은 걸까?",
       type:"ox",
-      choices:["O 좋은 행동","X 쓸데없어"],
+      choices:["O 좋은 행동","X 나쁜 행동"],
       answerIndex:0,
       feedback:"함께 알려주면 친구도 건강해져요 👫"
     }
   },
   {
-    label:"눈 비비지 않기",
+    label:"눈을 비비면?",
     quiz:{
       title:"눈을 비비면?",
       question:"놀이터에서 놀고 그대로 눈을 비비면 어떻게 될까?",
@@ -762,7 +762,7 @@ const tilesData = [
     }
   },
   {
-    label:"수건으로 꾹",
+    label:"손을 씻은 후에는?",
     quiz:{
       title:"손 닦을 때",
       question:"손을 다 씻은 다음에는?\n1) 바지에 슥슥\n2) 개인수건/일회용 타월로 꾹꾹",
@@ -773,7 +773,7 @@ const tilesData = [
     }
   },
   {
-    label:"거의 다 왔어",
+    label:"조금만 더 힘내!",
     quiz:{
       title:"GOAL 직전!",
       question:"조금만 더 가면 깨끗손 챔피언!\n준비됐나요?",
@@ -786,7 +786,7 @@ const tilesData = [
 ];
 
 const finalPopup = {
-  title:"축하해요! 깨끗손 챔피언 🎉",
+  title:"축하해요! 손씻기 챔피언 🎉",
   question:
     "손씻기 6단계 기억해볼까요?\n\n" +
     "1. 손바닥 문질문질\n" +
@@ -796,10 +796,11 @@ const finalPopup = {
     "5. 엄지손가락 빙글빙글\n" +
     "6. 손목까지 싹싹\n\n" +
     "흐르는 물에 비누로 30초!",
+    "10월 15일 세계 손씻기의 날 기억해줘!"
   type:"info",
   choices:[],
   answerIndex:null,
-  feedback:"너랑 함께라서 더 안전해졌어 🧼💖"
+  feedback:"친구와 함께라서 더욱 깨끗하고 안전해졌어!🧼💖"
 };
 
 /* ======================================================
@@ -927,36 +928,59 @@ function renderPlayers(){
 /* ======================================================
    폭죽 이펙트
    ====================================================== */
-function makeFireworkBurst(x,y){
-  // x,y: 화면 좌표(px)
-  for(let i=0; i<12; i++){
+function makeFireworkBurst(x, y) {
+  // 더 크게 팡! 터뜨리기
+  const particleCount = 28; // 기존 12 → 28
+  for (let i = 0; i < particleCount; i++) {
     const dot = document.createElement("div");
-    dot.className="burst";
-    const angle = (Math.PI*2)* (i/12);
-    const dist = 60 + Math.random()*30;
-    const dx = Math.cos(angle)*dist;
-    const dy = Math.sin(angle)*dist;
-    dot.style.left = x+"px";
-    dot.style.top = y+"px";
-    dot.style.setProperty("--dx", dx+"px");
-    dot.style.setProperty("--dy", dy+"px");
-    dot.style.background = `hsl(${Math.floor(Math.random()*360)},80%,60%)`;
+    dot.className = "burst";
+
+    // 조각(컨페티) 조금 더 크게
+    dot.style.width = "10px";
+    dot.style.height = "10px";
+    dot.style.borderRadius = "3px"; // 살짝 네모 느낌 주면 진짜 컨페티 같이 보여
+
+    // 각도 랜덤
+    const angle = Math.random() * Math.PI * 2;
+
+    // 훨씬 멀리 날아가게 (원래 60~90px 정도였음)
+    const dist = 120 + Math.random() * 80; // 120~200px
+
+    const dx = Math.cos(angle) * dist;
+    const dy = Math.sin(angle) * dist;
+
+    dot.style.left = x + "px";
+    dot.style.top = y + "px";
+    dot.style.setProperty("--dx", dx + "px");
+    dot.style.setProperty("--dy", dy + "px");
+
+    // 색 더 튀게 (HSL → 높은 채도)
+    dot.style.background = `hsl(${Math.floor(Math.random()*360)},90%,60%)`;
+
     fireworksEl.appendChild(dot);
+
     // 자동 제거
-    setTimeout(()=>dot.remove(),700);
+    setTimeout(() => dot.remove(), 800);
   }
 }
 
-function firework(){
-  fireworksEl.style.display="block";
-  const {innerWidth:w, innerHeight:h} = window;
-  makeFireworkBurst(w*0.5, h*0.3);
-  makeFireworkBurst(w*0.3, h*0.4);
-  makeFireworkBurst(w*0.7, h*0.4);
-  setTimeout(()=>{
-    fireworksEl.style.display="none";
-  },800);
+function firework() {
+  fireworksEl.style.display = "block";
+  const { innerWidth: w, innerHeight: h } = window;
+
+  // 가운데 + 양옆 + 위쪽도 팡팡
+  makeFireworkBurst(w * 0.5, h * 0.3);
+  makeFireworkBurst(w * 0.3, h * 0.35);
+  makeFireworkBurst(w * 0.7, h * 0.35);
+  makeFireworkBurst(w * 0.4, h * 0.2);
+  makeFireworkBurst(w * 0.6, h * 0.2);
+
+  // 화면을 약간 더 오래 유지해서 애들이 확인할 시간 주기
+  setTimeout(() => {
+    fireworksEl.style.display = "none";
+  }, 1000);
 }
+
 
 /* ======================================================
    퀴즈 모달
