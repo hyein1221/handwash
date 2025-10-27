@@ -16,6 +16,8 @@
     --special-goal:#fff7d9;
     --bg:#f5fbff;
     --panel-bg:#ffffff;
+    --accent-blue:#13506f;
+    --accent-pink:#7a1d1d;
   }
 
   * { box-sizing:border-box; }
@@ -28,7 +30,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 16px;
+    padding: 16px 16px 80px;
     gap: 12px;
   }
 
@@ -52,7 +54,7 @@
     flex-direction:column;
     gap:16px;
     width:100%;
-    max-width:900px;
+    max-width:950px;
   }
   @media(min-width:768px){
     .layout {
@@ -122,7 +124,7 @@
     pointer-events:none;
   }
 
-  /* 중앙 안내 텍스트(로고영역 자리) */
+  /* 중앙 라벨: 로고 + 타이틀 */
   .center-label{
     position:absolute;
     top:50%;
@@ -131,39 +133,55 @@
     max-width:240px;
     transform:translate(-50%,-50%);
     text-align:center;
-    font-size:12px;
-    line-height:1.4;
     background:#ffffffcc;
     border:2px solid var(--line);
     border-radius:12px;
     box-shadow:0 16px 32px rgba(0,0,0,.07);
     padding:12px;
   }
-  .center-label-title{
+  .center-logo-wrap {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+  }
+  .center-logo-wrap img {
+    max-width:80px;
+    height:auto;
+    display:block;
+  }
+  .center-main-title{
     font-weight:600;
     font-size:14px;
-    margin-bottom:4px;
+    line-height:1.4;
     color:#1d2b3a;
   }
-  .center-label-sub{
+  .center-sub{
     font-size:10px;
     color:#4e6b86;
     line-height:1.4;
+    white-space:pre-line;
   }
 
-  /* player tokens */
+  /* player tokens (bigger now) */
   .player-token {
     position:absolute;
-    width:16px;
-    height:16px;
+    width:28px;
+    height:28px;
     border-radius:50%;
-    border:2px solid #fff;
-    box-shadow:0 4px 8px rgba(0,0,0,.2);
+    border:3px solid #fff;
+    box-shadow:0 4px 8px rgba(0,0,0,.25);
+    font-size:10px;
+    font-weight:700;
+    color:#1d2b3a;
+    display:flex;
+    align-items:center;
+    justify-content:center;
   }
   .p1 { background:var(--p1); }
   .p2 { background:var(--p2); }
 
-  /* small index badge (path step) */
+  /* index badge on tile */
   .idx {
     position:absolute;
     top:2px;
@@ -174,9 +192,16 @@
     font-weight:600;
   }
 
+  .label-text {
+    font-size:10px;
+    font-weight:600;
+    text-align:center;
+    line-height:1.3;
+  }
+
   /* SIDE PANEL */
   .panel {
-    flex:0 1 260px;
+    flex:0 1 280px;
     background:var(--panel-bg);
     border:2px solid var(--line);
     border-radius:16px;
@@ -205,17 +230,64 @@
     gap:8px;
   }
 
-  .value-box{
-    min-width:36px;
-    min-height:36px;
-    border-radius:10px;
-    border:2px solid var(--line);
+  /* 주사위 시각영역 */
+  .dice-visual {
+    width:40px;
+    height:40px;
+    border-radius:8px;
     background:#fff;
-    font-size:14px;
-    font-weight:600;
+    border:2px solid var(--line);
+    position:relative;
     display:flex;
-    align-items:center;
     justify-content:center;
+    align-items:center;
+    font-size:0; /* hide text */
+  }
+  .die-face {
+    width:24px;
+    height:24px;
+    position:relative;
+  }
+  .pip {
+    width:6px;
+    height:6px;
+    background:#1d2b3a;
+    border-radius:50%;
+    position:absolute;
+  }
+  /* positions for pip dots (like a real die) */
+  .pip.p1 { top:50%; left:50%; transform:translate(-50%,-50%); }
+  .pip.p2a { top:4px; left:4px; }
+  .pip.p2b { bottom:4px; right:4px; }
+  .pip.p3a { top:4px; left:4px; }
+  .pip.p3b { top:50%; left:50%; transform:translate(-50%,-50%); }
+  .pip.p3c { bottom:4px; right:4px; }
+  .pip.p4a { top:4px; left:4px; }
+  .pip.p4b { top:4px; right:4px; }
+  .pip.p4c { bottom:4px; left:4px; }
+  .pip.p4d { bottom:4px; right:4px; }
+  .pip.p5a { top:4px; left:4px; }
+  .pip.p5b { top:4px; right:4px; }
+  .pip.p5c { bottom:4px; left:4px; }
+  .pip.p5d { bottom:4px; right:4px; }
+  .pip.p5e { top:50%; left:50%; transform:translate(-50%,-50%); }
+  .pip.p6a { top:4px; left:4px; }
+  .pip.p6b { top:4px; right:4px; }
+  .pip.p6c { top:50%; left:4px; transform:translateY(-50%); }
+  .pip.p6d { top:50%; right:4px; transform:translateY(-50%); }
+  .pip.p6e { bottom:4px; left:4px; }
+  .pip.p6f { bottom:4px; right:4px; }
+
+  /* roll animation (shake) */
+  .rolling {
+    animation: shake 0.4s infinite;
+  }
+  @keyframes shake {
+    0%   { transform: rotate(0deg)   scale(1); }
+    25%  { transform: rotate(10deg)  scale(1.05); }
+    50%  { transform: rotate(0deg)   scale(1); }
+    75%  { transform: rotate(-10deg) scale(1.05); }
+    100% { transform: rotate(0deg)   scale(1); }
   }
 
   #rollBtn{
@@ -230,6 +302,10 @@
     box-shadow:0 8px 16px rgba(29,144,255,.3);
     cursor:pointer;
   }
+  #rollBtn:disabled {
+    opacity:.5;
+    cursor:default;
+  }
   #rollBtn:active{
     transform:translateY(1px);
     box-shadow:0 4px 8px rgba(29,144,255,.2);
@@ -242,13 +318,13 @@
   }
 
   .player-card{
-    flex:1 1 110px;
+    flex:1 1 125px;
     background:#f9f9fb;
     border:2px solid var(--line);
     border-radius:12px;
     padding:10px;
     line-height:1.4;
-    min-width:110px;
+    min-width:125px;
   }
   .player-head{
     display:flex;
@@ -258,8 +334,8 @@
     font-size:11px;
   }
   .dot{
-    width:10px;
-    height:10px;
+    width:12px;
+    height:12px;
     border-radius:50%;
     border:2px solid #fff;
     box-shadow:0 2px 4px rgba(0,0,0,.2);
@@ -301,7 +377,7 @@
     justify-content:center;
     align-items:center;
     padding:16px;
-    z-index:999;
+    z-index:900;
   }
   .modal{
     background:#fff;
@@ -313,6 +389,8 @@
     padding:16px;
     font-size:14px;
     line-height:1.4;
+    position:relative;
+    z-index:901;
   }
   .modal-title{
     font-size:14px;
@@ -378,12 +456,42 @@
     box-shadow:0 4px 8px rgba(29,144,255,.4);
   }
 
+  /* 폭죽 이펙트 */
+  .fireworks {
+    position:fixed;
+    left:0;top:0;right:0;bottom:0;
+    pointer-events:none;
+    overflow:hidden;
+    z-index:950;
+    display:none;
+  }
+  .burst {
+    position:absolute;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    animation: pop 700ms ease-out forwards;
+  }
+  @keyframes pop {
+    0%   { transform:translate(0,0) scale(1); opacity:1; }
+    100% { transform:translate(var(--dx),var(--dy)) scale(0.2); opacity:0; }
+  }
+
+  /* Footer info */
+  .footer-info {
+    margin-top:16px;
+    font-size:11px;
+    text-align:center;
+    color:#4e6b86;
+    line-height:1.5;
+  }
+
 </style>
 </head>
 <body>
 <h1>깨끗손 부루마블 🧼</h1>
 <div class="subtitle">
-  주사위를 굴려 한 칸씩 이동해요.<br/>
+  주사위를 굴려 앞으로 이동해요.<br/>
   도착한 칸의 손씻기 퀴즈에 답해볼까요?
 </div>
 
@@ -391,12 +499,15 @@
   <!-- BOARD -->
   <div class="board-wrapper">
     <div class="board" id="board">
-      <!-- 중앙 라벨(원하면 로고/이미지로 바꿔도 됨) -->
+      <!-- 중앙 라벨 -->
       <div class="center-label">
-        <div class="center-label-title">세계 손씻기의 날</div>
-        <div class="center-label-sub">
-          흐르는 물에 비누로 30초 🧼<br/>
-          손바닥 → 손등 → 손가락 사이 → 손톱 밑 → 엄지 → 손목
+        <div class="center-logo-wrap">
+          <img src="./rogo_1.png" alt="질병관리청 국민소통단 로고" />
+          <div class="center-main-title">손 씻기 게임</div>
+          <div class="center-sub">
+            흐르는 물에 비누로 30초 🧼
+            손바닥 → 손등 → 손가락 사이 → 손톱 밑 → 엄지 → 손목
+          </div>
         </div>
       </div>
     </div>
@@ -405,14 +516,20 @@
   <!-- SIDE PANEL -->
   <div class="panel">
     <div class="section-title">🎲 주사위 & 진행</div>
+
+    <div class="row" style="align-items:flex-start;">
+      <div>주사위:</div>
+      <div class="dice-visual" id="diceBox">
+        <div class="die-face" id="dieFace"></div>
+      </div>
+      <button id="rollBtn">주사위 굴리기</button>
+    </div>
+
     <div class="row">
       <div>현재 차례:</div>
-      <div class="value-box" id="currentPlayerBox">P1</div>
-    </div>
-    <div class="row">
-      <div>주사위:</div>
-      <div class="value-box" id="diceResult">-</div>
-      <button id="rollBtn">주사위 굴리기</button>
+      <div class="dice-visual" style="width:48px;height:32px;">
+        <div style="font-size:14px;font-weight:600;color:#1d2b3a;" id="currentPlayerBox">P1</div>
+      </div>
     </div>
 
     <div class="players-status">
@@ -444,6 +561,11 @@
   </div>
 </div>
 
+<div class="footer-info">
+  제작자: 질병관리청 국민소통단 9기 김혜인<br/>
+  문의: hyein_1221@hanmail.net
+</div>
+
 <!-- MODAL: 퀴즈 팝업 -->
 <div class="modal-overlay" id="quizModal">
   <div class="modal">
@@ -455,59 +577,34 @@
   </div>
 </div>
 
+<!-- 폭죽 -->
+<div class="fireworks" id="fireworks"></div>
+
+<!-- 이동 효과음 (짧은 클릭 사운드 base64) -->
+<audio id="stepSound">
+  <source src="data:audio/mp3;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZwAAAA8AAAACAAACcQCA//////////////////////////////8AAAAALGF2YQAAAA8AAAACAAACcQCA//////////////////////////////8AAAAA" type="audio/mp3">
+</audio>
+
 <script>
-/* =====================
-   경로 구성
-   =====================
+/* ======================================================
+   경로 정의 (보드 테두리 한 바퀴)
+   ======================================================
 
-우리는 5x5 그리드(0~24 index)를 쓸 거고,
-테두리만 실제 칸으로 사용해 한 바퀴 도는 구조로 갈게.
+5x5 그리드의 인덱스: row*5 + col
+우리는 오른쪽 아래 모서리(4,4)에서 출발해서
+시계방향으로 한 바퀴 도는 느낌 대신,
+우리가 정의한 순서대로만 이동하면 돼.
 
-gridIndex = row*5+col
-
-테두리 순서(시계방향):
-(4,4) START -> ... -> 다시 (4,4) GOAL 느낌.
-즉 START와 GOAL은 같은 칸인데
-'한 바퀴 완료했는지'로 GOAL 판정.
-
-경로:
-아래줄 오른→왼, 왼쪽 위로, 위쪽 왼→오, 오른쪽 아래로 다시 출발지 근처
-
-경로 인덱스:
-(4,4)=24 START
-(4,3)=23
-(4,2)=22
-(4,1)=21
-(4,0)=20
-(3,0)=15
-(2,0)=10
-(1,0)=5
-(0,0)=0
-(0,1)=1
-(0,2)=2
-(0,3)=3
-(0,4)=4
-(1,4)=9
-(2,4)=14
-(3,4)=19
-(4,4)=24 다시 도착 → GOAL
-
-=> 총 17스텝이지만 우리는 "중복 없이" 돌고 싶으니까
-(4,4) 중복을 빼고 경로를 linear하게 만들면:
-[24,23,22,21,20,15,10,5,0,1,2,3,4,9,14,19] 16칸 + 마지막에 다시 24로 돌아오면 골인.
-
-즉: pathIndex 0~15 까지 진행 후
-다음 이동으로 다시 24에 오면 GOAL.
+pathOrder[0] = START 위치 gridIndex(4,4)=24
+...
+마지막 pathOrder[15] = gridIndex(3,4)=19
+그 다음 다시 START(24)로 오면 GOAL 처리.
 */
-
 const pathOrder = [
   24,23,22,21,20,15,10,5,0,1,2,3,4,9,14,19
 ];
-// pathOrder[0] = 24(START tile gridIndex)
-// pathOrder[last] = 19, 그리고 다음 칸은 다시 24로 가면 GOAL
+// 총 16칸. 한 바퀴 돌고 다시 24로 돌아오면 완주.
 
-// 칸 타이틀(보드에 적힐 짧은 이름) + 퀴즈 데이터
-// 각 path 위치별로 하나씩
 const tilesData = [
   {
     label:"START",
@@ -529,7 +626,7 @@ const tilesData = [
       type:"mcq",
       choices:["밥 먹기 전","장난감 보기 전"],
       answerIndex:0,
-      feedback:"식사하거나 간식 먹기 전엔 손을 깨끗하게 씻어요 🍽"
+      feedback:"식사나 간식 전에는 손을 깨끗하게 씻어요 🍽"
     }
   },
   {
@@ -547,7 +644,7 @@ const tilesData = [
     label:"비누 꼭?",
     quiz:{
       title:"비누가 왜 필요할까?",
-      question:"손에 묻은 세균을 잘 없애주는 것은 무엇일까요?\n1) 비누와 물\n2) 바람 쐬기",
+      question:"세균을 잘 없애주는 것은?\n1) 비누와 물\n2) 바람 쐬기",
       type:"mcq",
       choices:["비누와 물","바람 쐬기"],
       answerIndex:0,
@@ -580,7 +677,7 @@ const tilesData = [
     label:"바깥놀이 후",
     quiz:{
       title:"놀이터 다녀온 뒤",
-      question:"모래놀이, 미끄럼틀 놀이 후에는?\nO) 손씻기\nX) 그냥 간식 먹기",
+      question:"모래놀이 후엔?\nO) 손씻기\nX) 그냥 간식 먹기",
       type:"ox",
       choices:["O 손씻기","X 그냥 먹기"],
       answerIndex:0,
@@ -595,13 +692,13 @@ const tilesData = [
       type:"mcq",
       choices:["응 괜찮아","아니, 손씻고 먹어야 해"],
       answerIndex:1,
-      feedback:"동물 만진 뒤엔 꼭 손을 씻고 음식 만지기 🐶🧼"
+      feedback:"동물 만진 뒤엔 꼭 손을 씻고 음식을 만져요 🐶🧼"
     }
   },
   {
     label:"손가락 사이",
     quiz:{
-      title:"깨끗하게 씻는 방법",
+      title:"어디까지 씻어?",
       question:"손바닥만 살짝 씻으면 될까?\n아니면 손가락 사이까지 꾹꾹 씻어야 할까?",
       type:"mcq",
       choices:["손바닥만","손가락 사이까지"],
@@ -617,7 +714,7 @@ const tilesData = [
       type:"mcq",
       choices:["3초","30초"],
       answerIndex:1,
-      feedback:"비누로 30초 동안 천천히 문질러요. 타이머 ‘띠링’까지! ⏱"
+      feedback:"비누로 30초 동안 천천히 문질러요. 타이머 '띠링'까지! ⏱"
     }
   },
   {
@@ -646,7 +743,7 @@ const tilesData = [
     label:"친구랑 같이",
     quiz:{
       title:"친구와 약속",
-      question:"친구에게 ‘밥 먹기 전에는 손 씻자!’ 라고 말해주는 건 좋은 걸까?",
+      question:"친구에게 '밥 먹기 전엔 손 씻자!'라고 말해주는 건 좋은 걸까?",
       type:"ox",
       choices:["O 좋은 행동","X 쓸데없어"],
       answerIndex:0,
@@ -656,7 +753,7 @@ const tilesData = [
   {
     label:"눈 비비지 않기",
     quiz:{
-      title:"더러운 손으로 눈 만지면?",
+      title:"눈을 비비면?",
       question:"놀이터에서 놀고 그대로 눈을 비비면 어떻게 될까?",
       type:"mcq",
       choices:["세균이 들어갈 수 있어요","아무 일도 안 생겨요"],
@@ -688,7 +785,6 @@ const tilesData = [
   }
 ];
 
-// 손씻기 6단계 안내 (GOAL 도착 시)
 const finalPopup = {
   title:"축하해요! 깨끗손 챔피언 🎉",
   question:
@@ -706,14 +802,12 @@ const finalPopup = {
   feedback:"너랑 함께라서 더 안전해졌어 🧼💖"
 };
 
-/* =====================
-   보드 DOM 생성
-   =====================*/
-
+/* ======================================================
+   보드 DOM 만들기
+   ====================================================== */
 const boardEl = document.getElementById("board");
 
-// 25칸 만들기 (5x5). 전부 기본적으로 empty로 깔고,
-// pathOrder에 해당하는 칸만 실제 타일로 바꿈.
+// 25칸(5x5) 기본 empty로 깔고
 for(let cell=0; cell<25; cell++){
   const d=document.createElement("div");
   d.classList.add("tile","empty");
@@ -721,53 +815,47 @@ for(let cell=0; cell<25; cell++){
   boardEl.appendChild(d);
 }
 
-// pathOrder에 따라 표시
+// pathOrder에 실제 칸 채우기 + START/GOAL 스타일
 for(let step=0; step<pathOrder.length; step++){
-  const gridIdx = pathOrder[step]; // 24,23,22...
+  const gridIdx = pathOrder[step];
   const tileEl = boardEl.querySelector(`[data-grid-index="${gridIdx}"]`);
   tileEl.classList.remove("empty");
-
-  // START 칸 (path step 0)
   if(step===0){
     tileEl.classList.add("start-tile");
   }
-  // 마지막 path step (pathOrder[pathOrder.length-1])은 GOAL로 가기 직전 칸
   if(step===pathOrder.length-1){
     tileEl.classList.add("goal-tile");
   }
-
-  // idx badge + label
   const idxDiv=document.createElement("div");
   idxDiv.classList.add("idx");
   idxDiv.textContent = step;
   tileEl.appendChild(idxDiv);
 
   const labelDiv=document.createElement("div");
-  labelDiv.style.fontSize="10px";
-  labelDiv.style.fontWeight="600";
-  labelDiv.style.textAlign="center";
+  labelDiv.classList.add("label-text");
   labelDiv.textContent = tilesData[step].label;
   tileEl.appendChild(labelDiv);
 }
 
-/* =====================
+/* ======================================================
    게임 상태
-   =====================*/
+   ====================================================== */
 let currentPlayer = 1; // 1 or 2
-let pos = {1:0, 2:0};  // path index 위치 (0~마지막)
+let pos = {1:0, 2:0};  // path index 위치 (0~15)
 let finished = {1:false, 2:false};
 let gameOver = false;
+let rolling = false;
 
-// UI refs
-const diceBox = document.getElementById("diceResult");
+const dieFaceEl = document.getElementById("dieFace");
 const rollBtn = document.getElementById("rollBtn");
-const messageTitle = document.getElementById("messageTitle");
-const messageBody = document.getElementById("messageBody");
-const p1PosText = document.getElementById("p1PosText");
-const p2PosText = document.getElementById("p2PosText");
 const currentPlayerBox = document.getElementById("currentPlayerBox");
 
-// modal refs
+const p1PosText = document.getElementById("p1PosText");
+const p2PosText = document.getElementById("p2PosText");
+
+const messageTitle = document.getElementById("messageTitle");
+const messageBody = document.getElementById("messageBody");
+
 const quizModal = document.getElementById("quizModal");
 const quizTitle = document.getElementById("quizTitle");
 const quizQuestion = document.getElementById("quizQuestion");
@@ -775,9 +863,39 @@ const quizFeedback = document.getElementById("quizFeedback");
 const choicesContainer = document.getElementById("choicesContainer");
 const closeQuizBtn = document.getElementById("closeQuizBtn");
 
-/* 플레이어 말 그리기 */
+const fireworksEl = document.getElementById("fireworks");
+const stepSound = document.getElementById("stepSound");
+
+/* ======================================================
+   주사위 그리기
+   ====================================================== */
+function renderDieFace(n){
+  // n:1~6
+  // dieFaceEl 안에 pip DOM 다시 넣기
+  dieFaceEl.innerHTML = "";
+  const face = document.createElement("div");
+  face.className = "die-face";
+  if(n===1){
+    face.innerHTML = `<div class="pip p1"></div>`;
+  }else if(n===2){
+    face.innerHTML = `<div class="pip p2a"></div><div class="pip p2b"></div>`;
+  }else if(n===3){
+    face.innerHTML = `<div class="pip p3a"></div><div class="pip p3b"></div><div class="pip p3c"></div>`;
+  }else if(n===4){
+    face.innerHTML = `<div class="pip p4a"></div><div class="pip p4b"></div><div class="pip p4c"></div><div class="pip p4d"></div>`;
+  }else if(n===5){
+    face.innerHTML = `<div class="pip p5a"></div><div class="pip p5b"></div><div class="pip p5c"></div><div class="pip p5d"></div><div class="pip p5e"></div>`;
+  }else if(n===6){
+    face.innerHTML = `<div class="pip p6a"></div><div class="pip p6b"></div><div class="pip p6c"></div><div class="pip p6d"></div><div class="pip p6e"></div><div class="pip p6f"></div>`;
+  }
+  dieFaceEl.appendChild(face);
+}
+
+/* ======================================================
+   플레이어 말 렌더링
+   ====================================================== */
 function renderPlayers(){
-  // 이전 토큰 삭제
+  // 기존 토큰 제거
   document.querySelectorAll(".player-token").forEach(n=>n.remove());
 
   [1,2].forEach(p=>{
@@ -788,14 +906,16 @@ function renderPlayers(){
     const token=document.createElement("div");
     token.classList.add("player-token", p===1?"p1":"p2");
 
-    // 두 명 겹치면 좌우로 살짝 나눠
     if(p===1){
       token.style.bottom="4px";
       token.style.left="4px";
+      token.textContent="1";
     } else {
-      token.style.bottom="4px";
+      token.style.top="4px";
       token.style.right="4px";
+      token.textContent="2";
     }
+
     tileEl.appendChild(token);
   });
 
@@ -804,63 +924,88 @@ function renderPlayers(){
   currentPlayerBox.textContent = currentPlayer===1?"P1":"P2";
 }
 
-/* 칸 정보 표시 + 퀴즈 모달 띄우기 */
-function arriveTile(player){
-  const step = pos[player];
-  const tileInfo = tilesData[step];
-
-  // 사이드 패널 현재칸 표시
-  messageTitle.textContent = tileInfo.label;
-  messageBody.textContent = tileInfo.quiz.feedback || tileInfo.quiz.question || "";
-
-  // GOAL 체크:
-  // GOAL은 "한 바퀴 돌아서 다시 START지점(=gridIdx 24)" 오면.
-  // 우리의 path 마지막 index는 pathOrder.length-1.
-  // 그 다음에 다시 START(24)로 오면 finish(true)
-  // 구현: 만약 현재가 pathOrder.length-1 이고 주사위가 앞으로 가서
-  // 다시 START(0) 이상 넘어갔다면 finish로 처리해야 함.
-  // 간단화: 플레이어가 마지막 칸(path 마지막 index)을 지나 앞으로 더 가려고 할 때 finish.
-  // => move 단계에서 처리.
-
-  // 퀴즈 모달 띄우기
-  openQuizModal(tileInfo.quiz);
+/* ======================================================
+   폭죽 이펙트
+   ====================================================== */
+function makeFireworkBurst(x,y){
+  // x,y: 화면 좌표(px)
+  for(let i=0; i<12; i++){
+    const dot = document.createElement("div");
+    dot.className="burst";
+    const angle = (Math.PI*2)* (i/12);
+    const dist = 60 + Math.random()*30;
+    const dx = Math.cos(angle)*dist;
+    const dy = Math.sin(angle)*dist;
+    dot.style.left = x+"px";
+    dot.style.top = y+"px";
+    dot.style.setProperty("--dx", dx+"px");
+    dot.style.setProperty("--dy", dy+"px");
+    dot.style.background = `hsl(${Math.floor(Math.random()*360)},80%,60%)`;
+    fireworksEl.appendChild(dot);
+    // 자동 제거
+    setTimeout(()=>dot.remove(),700);
+  }
 }
 
-/* 퀴즈 모달 구성 */
-function openQuizModal(quiz){
+function firework(){
+  fireworksEl.style.display="block";
+  const {innerWidth:w, innerHeight:h} = window;
+  makeFireworkBurst(w*0.5, h*0.3);
+  makeFireworkBurst(w*0.3, h*0.4);
+  makeFireworkBurst(w*0.7, h*0.4);
+  setTimeout(()=>{
+    fireworksEl.style.display="none";
+  },800);
+}
+
+/* ======================================================
+   퀴즈 모달
+   ====================================================== */
+function openQuizModal(quiz, celebrate){
   quizModal.style.display="flex";
   quizTitle.textContent = quiz.title;
   quizQuestion.textContent = quiz.question;
   quizFeedback.textContent = "";
   choicesContainer.innerHTML = "";
 
-  // type info이면 닫기만
+  // 축하 플래그(정답 맞으면 폭죽) 초기화
+  let answered = false;
+
   if(quiz.type==="info"){
     closeQuizBtn.textContent="확인";
-    return;
+  }else{
+    closeQuizBtn.textContent="닫기";
   }
-
-  closeQuizBtn.textContent="닫기";
 
   quiz.choices.forEach((choiceText, idx)=>{
     const btn=document.createElement("button");
     btn.classList.add("choice-btn");
     btn.textContent = choiceText;
+
     btn.addEventListener("click",()=>{
+      if(answered) return;
+      answered=true;
       const correct = (idx===quiz.answerIndex);
       if(correct){
         btn.classList.add("correct");
         quizFeedback.textContent = quiz.feedback || "정답!";
+        // 축하 폭죽
+        firework();
       }else{
         btn.classList.add("wrong");
-        quizFeedback.textContent = "다시 한번 생각해볼까?\n" + (quiz.feedback||"");
+        quizFeedback.textContent = "다시 생각해볼까?\n" + (quiz.feedback||"");
       }
     });
+
     choicesContainer.appendChild(btn);
   });
+
+  // info 타입일 경우에도 완주나 특별 상황에는 폭죽 가능
+  if(quiz.type==="info" && celebrate){
+    firework();
+  }
 }
 
-/* 최종(손씻기 6단계) 모달 */
 function openFinalModal(){
   quizModal.style.display="flex";
   quizTitle.textContent = finalPopup.title;
@@ -868,61 +1013,140 @@ function openFinalModal(){
   quizFeedback.textContent = finalPopup.feedback;
   choicesContainer.innerHTML = "";
   closeQuizBtn.textContent="완료";
+  firework();
 }
 
-/* 모달 닫기 */
+/* 닫기 버튼 */
 closeQuizBtn.addEventListener("click",()=>{
   quizModal.style.display="none";
 });
 
-/* 이동 처리 */
-function movePlayer(steps){
-  if(gameOver) return;
+/* 칸 도착 후 처리 */
+function arriveTile(player){
+  const step = pos[player];
+  const tileInfo = tilesData[step];
 
-  const p=currentPlayer;
-  let newPos = pos[p] + steps;
+  // 사이드 패널 메시지 갱신
+  messageTitle.textContent = tileInfo.label;
+  messageBody.textContent = tileInfo.quiz.feedback || tileInfo.quiz.question || "";
 
-  // 아직 안 끝난 플레이어만 이동
-  if(finished[p]){
-    // 이미 골인했으면 그냥 차례 넘김
-  } else {
-    // 만약 path 끝(마지막 인덱스 15)을 넘으면 -> GOAL 도착으로 처리
-    if(newPos > pathOrder.length-1){
-      newPos = 0; // 다시 START 위치로 돌아온 거라고 간주
-      finished[p]=true;
-      pos[p]=newPos;
-      renderPlayers();
-      openFinalModal();
-    } else {
-      // 정상 이동
-      pos[p]=newPos;
-      renderPlayers();
-      arriveTile(p);
-    }
-  }
-
-  // 모두 끝났는지 체크
-  if(finished[1] && finished[2]){
-    gameOver=true;
-  }
-
-  // 턴 교체
-  currentPlayer = (currentPlayer===1)?2:1;
-  renderPlayers();
+  // 퀴즈 모달 띄우기
+  openQuizModal(tileInfo.quiz, false);
 }
 
-/* 주사위 버튼 */
-const diceEl = document.getElementById("diceResult");
-rollBtn.addEventListener("click",()=>{
-  if(gameOver) return;
-  const roll = Math.floor(Math.random()*6)+1;
-  diceEl.textContent = roll;
-  movePlayer(roll);
-});
+/* ======================================================
+   이동 애니메이션 (한 칸씩 딱딱딱 이동)
+   ====================================================== */
+function animateMove(player, steps, onDone){
+  // steps만큼 1칸씩 이동
+  // 마지막 도착 후 arriveTile 호출
+  if(steps<=0){
+    // 아무 이동도 없으면 그냥 도착 처리
+    arriveTile(player);
+    if(onDone) onDone();
+    return;
+  }
 
-/* 초기 렌더 */
+  let moved = 0;
+
+  function stepOnce(){
+    if(moved>=steps){
+      // 다 이동 끝!
+      // 도착한 칸 확인
+      arriveTile(player);
+      if(onDone) onDone();
+      return;
+    }
+
+    // 다음 칸으로 실제 1칸 이동
+    pos[player]++;
+
+    // path 마지막을 넘는 경우 -> 한 바퀴 돌고 다시 START(=finish)
+    if(pos[player] > pathOrder.length-1){
+      pos[player] = 0;
+      finished[player]=true;
+      renderPlayers();
+      openFinalModal(); // 손씻기 6단계 안내 + 폭죽
+      if(onDone) onDone();
+      return;
+    }
+
+    renderPlayers();
+    // 이동마다 효과음
+    try {
+      stepSound.currentTime = 0;
+      stepSound.play().catch(()=>{});
+    } catch(e){}
+
+    moved++;
+    setTimeout(stepOnce, 250); // 한 칸 이동 템포
+  }
+
+  stepOnce();
+}
+
+/* ======================================================
+   주사위 굴리기 애니메이션 + 이동 처리
+   ====================================================== */
+function rollDiceAndMove(){
+  if(gameOver || rolling) return;
+  rolling = true;
+  rollBtn.disabled = true;
+
+  // 굴리는 동안 랜덤 숫자 흔들기
+  const startTime = Date.now();
+  const rollDuration = 1000; // 1초 정도 굴리는 느낌
+  const diceBox = document.getElementById("diceBox");
+  diceBox.classList.add("rolling");
+
+  function animFrame(){
+    const elapsed = Date.now()-startTime;
+    const tempVal = Math.floor(Math.random()*6)+1;
+    renderDieFace(tempVal);
+
+    if(elapsed < rollDuration){
+      requestAnimationFrame(animFrame);
+    }else{
+      // 최종 값 확정
+      const finalVal = Math.floor(Math.random()*6)+1;
+      renderDieFace(finalVal);
+      diceBox.classList.remove("rolling");
+
+      // 이제 이동 애니메이션
+      const thisPlayer = currentPlayer;
+      animateMove(thisPlayer, finalVal, ()=>{
+        // 이동 후 턴 넘기기 / 게임종료 확인
+        if(finished[1] && finished[2]){
+          gameOver=true;
+        }
+        // 턴 변경
+        currentPlayer = (currentPlayer===1)?2:1;
+        renderPlayers();
+        rollBtn.disabled = false;
+        rolling = false;
+      });
+    }
+  }
+  animFrame();
+}
+
+/* ======================================================
+   초기 상태 세팅
+   ====================================================== */
+renderDieFace(1);
 renderPlayers();
-arriveTile(1); // 처음 안내(START)
+// START칸 안내를 첫 화면에 바로 보여주고 싶으면:
+(function initMessage(){
+  const step = pos[1]; // p1 현재 step (0)
+  const tileInfo = tilesData[step];
+  messageTitle.textContent = tileInfo.label;
+  messageBody.textContent = tileInfo.quiz.feedback || tileInfo.quiz.question || "";
+})();
+
+/* 버튼 이벤트 */
+rollBtn.addEventListener("click", rollDiceAndMove);
+
 </script>
 </body>
 </html>
+
